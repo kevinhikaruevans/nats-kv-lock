@@ -27,9 +27,7 @@ class NatsKvLock:
             bool: returns True on success, False if it could not acquire a lock in time
         """
 
-        # TODO
-        # - ttl can be simulated by checking if .create fails -> we should see if the existing key is out of date
-        #   - this is problematic b/c two locks can have different ttls
+        # TODO: waiting on nats.py to implement ttl
 
         while True:
             try:
