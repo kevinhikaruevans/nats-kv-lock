@@ -1,15 +1,14 @@
 # nats-kv-lock
 A simple, distributed lock using NATS.io
 
-### Note!
+## Notes
 
-- This is a simple PoC and perhaps shouldn't be used in a production environment
-- This does NOT guarantee order, i.e. it is an unfair lock.
+This lock follows [the exclusive locking example](https://docs.nats.io/nats-concepts/jetstream/key-value-store/kv_walkthrough#create-aka-exclusive-locking) in the NATS JetStream docs. 
+This lock does NOT guarantee order, i.e. it is an unfair lock.
 
 ## Installation
 
 Assuming you already have NATS installed, you can simply `pip install nats-kv-lock`
-
 
 ## Example
 
@@ -46,3 +45,20 @@ async def main():
 if __name__ == '__main__':
     asyncio.run(main())
 ```
+
+### With a timeout
+
+If the lock needs a locking timeout, you can pass in a timeout into `acquire()`,
+
+```python
+my_lock = NatsKvLock(kv, 'my_lock')
+
+was_locked = await x.acquire(5.0)
+
+if was_locked:
+   await asyncio.sleep(1.0)
+
+await x.release()
+```
+
+Using a `try-finally` block would be a good choice here too.
